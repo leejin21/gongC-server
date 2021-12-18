@@ -8,6 +8,7 @@ const getYesterday = () => {
     d.setMilliseconds(0);
     d.setHours(23);
     d.setMinutes(59);
+    console.log(d);
     return d;
 };
 exports.getYesterday = getYesterday;
