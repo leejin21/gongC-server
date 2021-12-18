@@ -110,6 +110,7 @@ const postData = async (req, res) => {
     }
     const { status } = req.body;
     const user = req.user;
+    console.log(status, user.email);
     const returnData = await (0, concent_services_1.postDataService)(user, status);
     res.status(returnData.status).send({
         status: returnData.status,
@@ -137,7 +138,27 @@ const getDailyData = async (req, res) => {
         });
     }
 };
-const getWeeklyData = async (req, res) => { };
+const getWeeklyData = async (req, res) => {
+    const user = req.user;
+    const returnData = await (0, concent_services_1.getWeeklyDataService)(user);
+    if (returnData.status == 200) {
+        // when successed
+        const { status, message, responseData } = returnData;
+        res.status(status).send({
+            status,
+            message,
+            responseData,
+        });
+    }
+    else {
+        // when failed
+        const { status, message } = returnData;
+        res.status(status).send({
+            status,
+            message,
+        });
+    }
+};
 const getMonthlyData = async (req, res) => { };
 exports.default = {
     postData: postData,

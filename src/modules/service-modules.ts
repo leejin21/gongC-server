@@ -11,5 +11,17 @@ export const getYesterday = () => {
     d.setMilliseconds(0);
     d.setHours(32);
     d.setMinutes(59);
+    console.log(d);
+    return d;
+};
+
+export const getLastWeekSundayThisTime = () => {
+    let d = new Date();
+    d.getDay();
+    if (d.getDay() == 0) {
+        d.setDate(d.getDate() - 7);
+    }
+    d.setDate(d.getDate() - d.getDay());
+    console.log(d);
     return d;
 };

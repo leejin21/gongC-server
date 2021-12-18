@@ -91,7 +91,7 @@ app.get("/test", auth_1.verifyToken, (req, res) => {
     // res.status(400).send({ done: false });
 });
 // 5000 포트로 서버 실행
-app.listen(PORT, HOST, async () => {
+app.listen(PORT, async () => {
     console.log(`server on: listening on ${HOST}:${PORT}`);
     // sequelize-db connection test
     await models_1.sequelize

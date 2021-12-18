@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getYesterday = void 0;
+exports.getLastWeekSundayThisTime = exports.getYesterday = void 0;
 const getYesterday = () => {
     let d = new Date();
     d.setDate(d.getDate() - 1);
@@ -8,6 +8,18 @@ const getYesterday = () => {
     d.setMilliseconds(0);
     d.setHours(32);
     d.setMinutes(59);
+    console.log(d);
     return d;
 };
 exports.getYesterday = getYesterday;
+const getLastWeekSundayThisTime = () => {
+    let d = new Date();
+    d.getDay();
+    if (d.getDay() == 0) {
+        d.setDate(d.getDate() - 7);
+    }
+    d.setDate(d.getDate() - d.getDay());
+    console.log(d);
+    return d;
+};
+exports.getLastWeekSundayThisTime = getLastWeekSundayThisTime;
