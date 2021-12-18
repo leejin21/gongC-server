@@ -107,7 +107,6 @@ const getWeeklyDataService = async (user) => {
         message: "server error",
         responseData: {},
     };
-    // * Get weekly data from StudyStatusTime
     let responseData = {
         concentValList: [0, 0, 0, 0, 0, 0, 0],
         playValList: [0, 0, 0, 0, 0, 0, 0],
@@ -115,7 +114,7 @@ const getWeeklyDataService = async (user) => {
         playTime: 0,
         totalTime: 0,
     };
-    // * Version: Not using node-schedule
+    // * Get weekly data from StudyStatusDays except for today
     await study_status_day_model_1.default.findAll({
         order: [["time", "ASC"]],
         where: {
@@ -127,6 +126,7 @@ const getWeeklyDataService = async (user) => {
         },
     })
         .then((resultList) => {
+        console.log(resultList);
         resultList.map((v, i) => {
             responseData.concentValList[i] = v.study_status;
             responseData.playValList[i] = v.play_status;
@@ -137,6 +137,63 @@ const getWeeklyDataService = async (user) => {
         responseData.playTime = responseData.playValList.reduce((prev, cur) => {
             return prev + cur;
         });
+    })
+        .catch((e) => {
+        console.log(e);
+        returnForm.status = 500;
+        returnForm.message = "Server Error";
+    });
+    console.log(responseData);
+    // * Get today data from StudyStatusTimes and add to responseData
+    await study_status_time_model_1.default.count({
+        where: {
+            userid: user.id,
+            status: "P",
+            createdAt: {
+                [sequelize_1.Op.gte]: (0, service_modules_1.getYesterday)(),
+            },
+        },
+    })
+        .then((result) => {
+        let idx = new Date().getDay() - 1;
+        idx = idx === -1 ? 6 : idx;
+        if (result) {
+            // 1분마다로 제한 주기
+            responseData.playValList[idx] = result;
+            responseData.playTime += result;
+        }
+        else {
+            responseData.playValList[idx] = 0;
+        }
+    })
+        .catch((e) => {
+        console.log(e);
+        returnForm.status = 500;
+        returnForm.message = "Server Error";
+    });
+    await study_status_time_model_1.default.count({
+        where: {
+            userid: user.id,
+            status: "C",
+            createdAt: {
+                [sequelize_1.Op.gte]: (0, service_modules_1.getYesterday)(),
+            },
+        },
+    })
+        .then((result) => {
+        let idx = new Date().getDay() - 1;
+        idx = idx === -1 ? 6 : idx;
+        if (result) {
+            // 1분마다로 제한 주기
+            // TODO give week day accurately by refactoring
+            console.log(idx);
+            responseData.concentValList[idx] = result;
+            responseData.concentTime += result;
+            console.log(responseData.concentValList);
+        }
+        else {
+            responseData.concentValList[idx] = 0;
+        }
         responseData.totalTime =
             responseData.concentTime + responseData.playTime;
         returnForm.status = 200;
