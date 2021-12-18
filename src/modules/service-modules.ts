@@ -9,7 +9,7 @@ export const getYesterday = () => {
     d.setDate(d.getDate() - 1);
     d.setSeconds(59);
     d.setMilliseconds(0);
-    d.setHours(23);
+    d.setHours(33);
     d.setMinutes(59);
     console.log(d);
     return d;
