@@ -115,6 +115,7 @@ const postData = async (req: Request, res: Response) => {
 
     const {status} = req.body;
     const user = req.user as User;
+    console.log(status, user.email);
 
     const returnData: serviceReturnForm = await postDataService(user, status);
 
