@@ -126,7 +126,6 @@ const getWeeklyDataService = async (user) => {
         },
     })
         .then((resultList) => {
-        console.log(resultList);
         resultList.map((v, i) => {
             responseData.concentValList[i] = v.study_status;
             responseData.playValList[i] = v.play_status;
