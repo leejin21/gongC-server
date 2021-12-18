@@ -11,7 +11,7 @@ let StudyStatusDay = class StudyStatusDay extends sequelize_typescript_1.Model {
 };
 __decorate([
     (0, sequelize_typescript_1.AllowNull)(false),
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING)
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER)
 ], StudyStatusDay.prototype, "userid", void 0);
 __decorate([
     (0, sequelize_typescript_1.AllowNull)(false),
