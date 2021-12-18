@@ -1,9 +1,15 @@
 import User from "../models/user.model";
 
-import {getYesterday, serviceReturnForm} from "../modules/service-modules";
+import {
+    getYesterday,
+    serviceReturnForm,
+    getLastWeekSundayThisTime,
+} from "../modules/service-modules";
 import StudyStatusTime from "../models/study-status-time.model";
 
-import {Op} from "sequelize";
+import {col, fn, Op} from "sequelize";
+import StudyStatusDay from "../models/study-status-day.model";
+import concentController from "../controllers/concent-controller";
 
 const postDataService = async (user: User, status: string) => {
     const returnForm: serviceReturnForm = {
@@ -97,4 +103,58 @@ const getDailyDataService = async (user: User) => {
     return returnForm;
 };
 
-export {postDataService, getDailyDataService};
+const getWeeklyDataService = async (user: User) => {
+    const returnForm: serviceReturnForm = {
+        status: 500,
+        message: "server error",
+        responseData: {},
+    };
+    // * Get weekly data from StudyStatusTime
+    let responseData = {
+        concentValList: [0, 0, 0, 0, 0, 0, 0],
+        playValList: [0, 0, 0, 0, 0, 0, 0],
+        concentTime: 0,
+        playTime: 0,
+        totalTime: 0,
+    };
+    // * Version: Not using node-schedule
+    await StudyStatusDay.findAll({
+        order: [["time", "ASC"]],
+        where: {
+            userid: user.id,
+            time: {
+                [Op.lt]: new Date(),
+                [Op.gt]: getLastWeekSundayThisTime(),
+            },
+        },
+    })
+        .then((resultList) => {
+            resultList.map((v, i) => {
+                responseData.concentValList[i] = v.study_status;
+                responseData.playValList[i] = v.play_status;
+            });
+            responseData.concentTime = responseData.concentValList.reduce(
+                (prev, cur) => {
+                    return prev + cur;
+                }
+            );
+            responseData.playTime = responseData.playValList.reduce(
+                (prev, cur) => {
+                    return prev + cur;
+                }
+            );
+            responseData.totalTime =
+                responseData.concentTime + responseData.playTime;
+            returnForm.status = 200;
+            returnForm.message = "Get Data Success";
+            returnForm.responseData = responseData;
+        })
+        .catch((e) => {
+            console.log(e);
+            returnForm.status = 500;
+            returnForm.message = "Server Error";
+        });
+    return returnForm;
+};
+
+export {postDataService, getDailyDataService, getWeeklyDataService};

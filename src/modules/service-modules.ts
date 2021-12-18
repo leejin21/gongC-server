@@ -13,3 +13,10 @@ export const getYesterday = () => {
     d.setMinutes(59);
     return d;
 };
+
+export const getLastWeekSundayThisTime = () => {
+    let d = new Date();
+    d.getDay();
+    d.setDate(d.getDate() - d.getDay());
+    return d;
+};
