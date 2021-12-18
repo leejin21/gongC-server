@@ -189,6 +189,7 @@ const getWeeklyDataService = async (user: User) => {
         .then((result) => {
             let idx = new Date().getDay() - 1;
             idx = idx === -1 ? 6 : idx;
+            console.log("인덱스", idx);
             if (result) {
                 // 1분마다로 제한 주기
                 // TODO give week day accurately by refactoring
