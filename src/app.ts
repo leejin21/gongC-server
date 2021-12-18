@@ -97,7 +97,7 @@ app.listen(PORT, async () => {
     console.log(`server on: listening on ${HOST}:${PORT}`);
     // sequelize-db connection test
     await sequelize
-        .sync({force: true})
+        .sync({})
         .then(async () => {
             console.log("seq connection success");
         })
