@@ -6,7 +6,7 @@ const getYesterday = () => {
     d.setDate(d.getDate() - 1);
     d.setSeconds(59);
     d.setMilliseconds(0);
-    d.setHours(32);
+    d.setHours(25);
     d.setMinutes(59);
     return d;
 };
