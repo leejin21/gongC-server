@@ -27,12 +27,18 @@ const dotenv = __importStar(require("dotenv"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const signUpService = async (email, password, nickname) => {
+const signUpService = async (email, password, nickname, confirmpw) => {
     const returnForm = {
         status: 500,
         message: "server error",
         responseData: {},
     };
+    // * Validate if password equals to confirmpw
+    if (confirmpw != password) {
+        returnForm.status = 400;
+        returnForm.message = "Confirmpw and Password not equal";
+        return returnForm;
+    }
     // * Validate if email already exists
     let isEmailExist = false;
     await user_model_1.default.findOne({ where: { email: email } })

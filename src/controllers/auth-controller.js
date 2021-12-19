@@ -14,6 +14,8 @@ const auth_services_1 = require("../services/auth-services");
  *         type: "string"
  *       nickname:
  *         type: "string"
+ *       confirmpw:
+ *         type: "string"
  */
 /**
  * @swagger
@@ -75,15 +77,18 @@ const auth_services_1 = require("../services/auth-services");
 // * CONTROLLER PART
 const signUp = async (req, res) => {
     // * Validate user input
-    if (!req.body.email || !req.body.password || !req.body.nickname) {
+    if (!req.body.email ||
+        !req.body.password ||
+        !req.body.nickname ||
+        !req.body.confirmpw) {
         res.status(400).send({
             status: 400,
-            message: "email and password and nickname is all required",
+            message: "email and password and nickname and confirmpw is all required",
         });
         return;
     }
-    const { email, password, nickname } = req.body;
-    const returnData = await (0, auth_services_1.signUpService)(email, password, nickname);
+    const { email, password, nickname, confirmpw } = req.body;
+    const returnData = await (0, auth_services_1.signUpService)(email, password, nickname, confirmpw);
     if (returnData.status == 200) {
         // when successed
         const { status, message, responseData } = returnData;

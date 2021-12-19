@@ -127,8 +127,10 @@ const getWeeklyDataService = async (user) => {
     })
         .then((resultList) => {
         resultList.map((v, i) => {
-            responseData.concentValList[i] = v.study_status;
-            responseData.playValList[i] = v.play_status;
+            let idx = new Date(v.time).getDay() - 1;
+            // console.log(idx);
+            responseData.concentValList[idx] = v.study_status;
+            responseData.playValList[idx] = v.play_status;
         });
         responseData.concentTime = responseData.concentValList.reduce((prev, cur) => {
             return prev + cur;
@@ -185,7 +187,6 @@ const getWeeklyDataService = async (user) => {
         console.log("인덱스", idx);
         if (result) {
             // 1분마다로 제한 주기
-            // TODO give week day accurately by refactoring
             console.log(idx);
             responseData.concentValList[idx] = result;
             responseData.concentTime += result;
