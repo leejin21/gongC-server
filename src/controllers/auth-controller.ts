@@ -16,6 +16,8 @@ import {serviceReturnForm} from "../modules/service-modules";
  *         type: "string"
  *       nickname:
  *         type: "string"
+ *       confirmpw:
+ *         type: "string"
  */
 /**
  * @swagger
@@ -78,19 +80,26 @@ import {serviceReturnForm} from "../modules/service-modules";
 // * CONTROLLER PART
 const signUp = async (req: Request, res: Response) => {
     // * Validate user input
-    if (!req.body.email || !req.body.password || !req.body.nickname) {
+    if (
+        !req.body.email ||
+        !req.body.password ||
+        !req.body.nickname ||
+        !req.body.confirmpw
+    ) {
         res.status(400).send({
             status: 400,
-            message: "email and password and nickname is all required",
+            message:
+                "email and password and nickname and confirmpw is all required",
         });
         return;
     }
-    const {email, password, nickname} = req.body;
+    const {email, password, nickname, confirmpw} = req.body;
 
     const returnData: serviceReturnForm = await signUpService(
         email,
         password,
-        nickname
+        nickname,
+        confirmpw
     );
     if (returnData.status == 200) {
         // when successed
